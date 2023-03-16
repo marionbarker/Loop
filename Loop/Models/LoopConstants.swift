@@ -15,7 +15,7 @@ enum LoopConstants {
     
     // Input field bounds
     
-    static let maxCarbEntryQuantity = HKQuantity(unit: .gram(), doubleValue: 250) // cannot exceed this value
+    static let maxCarbEntryQuantity = HKQuantity(unit: .gram(), doubleValue: 150) // cannot exceed this value
 
     static let warningCarbEntryQuantity = HKQuantity(unit: .gram(), doubleValue: 99) // user is warned above this value
     
@@ -45,7 +45,7 @@ enum LoopConstants {
     static let retrospectiveCorrectionEnabled = true
     
     // Percentage of recommended dose to apply as bolus when using automatic bolus dosing strategy
-    static let bolusPartialApplicationFactor = 0.4
+    static let bolusPartialApplicationFactor = 0.7
 
     /// The interval over which to aggregate changes in glucose for retrospective correction
     static let retrospectiveCorrectionGroupingInterval = TimeInterval(minutes: 30)
