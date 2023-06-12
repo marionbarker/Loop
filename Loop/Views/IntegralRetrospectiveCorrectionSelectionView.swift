@@ -47,7 +47,7 @@ public struct IntegralRetrospectiveCorrectionSelectionView: View {
     }
 }
 
-struct EnhancedAutoBolusSelectionView_Previews: PreviewProvider {
+struct IntegralRetrospectiveCorrectionView_Previews: PreviewProvider {
     static var previews: some View {
         IntegralRetrospectiveCorrectionSelectionView(isIntegralRetrospectiveCorrectionEnabled: .constant(true))
     }
