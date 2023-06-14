@@ -12,10 +12,10 @@ import LoopKitUI
 extension SettingsView {
     internal var algorithmExperimentsSection: some View {
         Section(header: SectionHeader(label: NSLocalizedString("Algorithm Experiments ⚠️", comment: "The title of the Algorithm Experiments section in settings"))) {
- 
+
             NavigationLink(destination: GlucoseBasedApplicationFactorSelectionView(isGlucoseBasedApplicationFactorEnabled: $isGlucoseBasedApplicationFactorEnabled)) {
                 HStack {
-                   Text("Glucose Based Partial Application")
+                    Text("Glucose Based Partial Application")
                     Spacer()
                     Text(isGlucoseBasedApplicationFactorEnabled ? "On" : "Off")
                 }

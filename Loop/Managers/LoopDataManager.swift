@@ -1698,7 +1698,7 @@ extension LoopDataManager {
                     return self.delegate?.roundBolusVolume(units: units) ?? units
                 }
 
-               // Create dosing strategy based on user setting
+                // Create dosing strategy based on user setting
                 let applicationFactorStrategy: ApplicationFactorStrategy = UserDefaults.standard.bool(forKey: "applyExperimentalGlucoseBasedApplicationFactor")
                     ? GlucoseBasedApplicationFactorStrategy()
                     : ConstantDosingStrategy()
@@ -2121,7 +2121,7 @@ extension LoopDataManager {
                 "]",
 
                 "isExperimentalIntegralRetrospectiveCorrectionEnabled: \(UserDefaults.standard.bool(forKey: "isExperimentalIntegralRetrospectiveCorrectionEnabled"))",
-                
+
                 "retrospectiveGlucoseDiscrepancies: [",
                 "* GlucoseEffect(start, mg/dL)",
                 (manager.retrospectiveGlucoseDiscrepancies ?? []).reduce(into: "", { (entries, entry) in
