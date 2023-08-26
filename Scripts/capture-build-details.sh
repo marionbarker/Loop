@@ -68,6 +68,8 @@ plutil -replace com-loopkit-Loop-srcroot -string "${PWD}" "${info_plist_path}"
 plutil -replace com-loopkit-Loop-build-date -string "$(date)" "${info_plist_path}"
 plutil -replace com-loopkit-Loop-xcode-version -string "${xcode_build_version}" "${info_plist_path}"
 
+warn "XXX ${date}"
+
 if [ -e "${provisioning_profile_path}" ]; then
   profile_expire_date=$(security cms -D -i "${provisioning_profile_path}" | plutil -p - | grep ExpirationDate | cut -b 23-)
   # Convert to plutil format
@@ -90,4 +92,9 @@ then
         plutil -replace com-loopkit-LoopWorkspace-git-branch -string "${branch}" "${info_plist_path}"
     fi
     popd . > /dev/null
+fi
+
+# Handle github action
+if [ -n "$GITHUB_ACTIONS" ]; then
+    plutil -replace com-loopkit-GitHub-build -bool true "${info_plist_path}"
 fi

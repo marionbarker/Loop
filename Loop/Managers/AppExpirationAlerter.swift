@@ -1,5 +1,5 @@
 //
-//  ProfileExpirationAlerter.swift
+//  AppExpirationAlerter.swift
 //  Loop
 //
 //  Created by Pete Schwamb on 8/21/21.
@@ -11,7 +11,7 @@ import UserNotifications
 import LoopCore
 
 
-class ProfileExpirationAlerter {
+class AppExpirationAlerter {
     
     static let expirationAlertWindow: TimeInterval = .days(20)
     static let settingsPageExpirationWarningModeWindow: TimeInterval = .days(3)
@@ -60,14 +60,14 @@ class ProfileExpirationAlerter {
         return String(format: NSLocalizedString("%1$@ will stop working in %2$@. You will need to update before that, with a new provisioning profile.", comment: "Format string for body for notification of upcoming provisioning profile expiration. (1: app name) (2: amount of time until expiration"), Bundle.main.bundleDisplayName, timeUntilExpirationStr)
     }
     
-    static func isNearProfileExpiration(profileExpiration:Date) -> Bool {
-        return profileExpiration.timeIntervalSinceNow < settingsPageExpirationWarningModeWindow
+    static func isNearExpiration(expirationDate:Date) -> Bool {
+        return expirationDate.timeIntervalSinceNow < settingsPageExpirationWarningModeWindow
     }
     
-    static func createProfileExpirationSettingsMessage(profileExpiration:Date) -> String {
-        let nearExpiration = isNearProfileExpiration(profileExpiration: profileExpiration)
+    static func createProfileExpirationSettingsMessage(expirationDate:Date) -> String {
+        let nearExpiration = isNearExpiration(expirationDate: expirationDate)
         let maxUnitCount = nearExpiration ? 2 : 1 // only include hours in the msg if near expiration
-        let readableRelativeTime: String? = relativeTimeFormatter(maxUnitCount: maxUnitCount).string(from: profileExpiration.timeIntervalSinceNow)
+        let readableRelativeTime: String? = relativeTimeFormatter(maxUnitCount: maxUnitCount).string(from: expirationDate.timeIntervalSinceNow)
         let relativeTimeRemaining: String = readableRelativeTime ?? NSLocalizedString("Unknown time", comment: "Unknown amount of time in settings' profile expiration section")
         let verboseMessage = createVerboseAlertMessage(timeUntilExpirationStr: relativeTimeRemaining)
         let conciseMessage = relativeTimeRemaining + NSLocalizedString(" remaining", comment: "remaining time in setting's profile expiration section")
@@ -82,5 +82,34 @@ class ProfileExpirationAlerter {
         formatter.zeroFormattingBehavior = .dropLeading
         formatter.maximumUnitCount = maxUnitCount
         return formatter;
+    }
+    
+    static func buildDate() -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEE MMM d HH:mm:ss 'UTC' yyyy"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX") // Set locale to ensure parsing works
+        
+        guard let dateString = BuildDetails.default.buildDateString,
+              let date = dateFormatter.date(from: dateString) else {
+            return nil
+        }
+        
+        return date
+    }
+    
+    static func isTestFlightBuild() -> Bool {
+        return BuildDetails.default.isGitHubBuild ?? false
+    }
+    
+    static func calculateExpirationDate(profileExpiration: Date) -> Date {
+        let isTestFlight = isTestFlightBuild()
+        
+        if isTestFlight, let buildDate = buildDate() {
+            let testflightExpiration = Calendar.current.date(byAdding: .day, value: 90, to: buildDate)!
+            
+            return profileExpiration < testflightExpiration ? profileExpiration : testflightExpiration
+        } else {
+            return profileExpiration
+        }
     }
 }
