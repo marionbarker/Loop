@@ -13,7 +13,7 @@ import LoopCore
 
 class AppExpirationAlerter {
     
-    static let expirationAlertWindow: TimeInterval = .days(20)
+    static let expirationAlertWindow: TimeInterval = .days(400)
     static let settingsPageExpirationWarningModeWindow: TimeInterval = .days(3)
 
     static func alertIfNeeded(viewControllerToPresentFrom: UIViewController) {
